@@ -14,6 +14,8 @@ import ru.kuz.spring_transaction.model.TransferEntity;
 import ru.kuz.spring_transaction.model.TransferRestModel;
 import ru.kuz.spring_transaction.repo.TransferRepository;
 
+import java.util.function.Supplier;
+
 @Service
 public class TransferServiceImpl
         implements TransferService {
@@ -23,13 +25,13 @@ public class TransferServiceImpl
     public static final String RESET = "\u001B[0m";   // Сброс цвета
     private final TransferRepository transferRepository;
 
-    private final BeanFactory beanFactory;
+    private final Supplier<TransferService> transferServiceSupplier;
 
     public TransferServiceImpl(TransferRepository transferRepository
             , BeanFactory beanFactory
     ) {
         this.transferRepository = transferRepository;
-        this.beanFactory = beanFactory;
+        this.transferServiceSupplier = ()->beanFactory.getBean(TransferService.class);
     }
 
     @Override
@@ -45,7 +47,8 @@ public class TransferServiceImpl
             LOGGER.info("{} Transfer method callRemoteService {}", GREEN, RESET);
 //            callRemoteService();
 //            transferService.callRemoteService(); // вызываем через прокси
-            beanFactory.getBean(TransferService.class).callRemoteService(); // вызываем через прокси
+//            beanFactory.getBean(TransferService.class).callRemoteService(); // вызываем через прокси
+            transferServiceSupplier.get().callRemoteService(); // вызываем через прокси
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
             throw new TransferServiceException(ex);
