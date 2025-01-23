@@ -7,7 +7,9 @@
 Новая транзакция не будет открыта.
 Сервис вызывает самого себя по своей ссылке.
 ![img_5.png](img_5.png)
-
+## 
+![img_15.png](img_15.png)
+# 1 способ
 Решить можно с помощью Self-injection
 ![img_6.png](img_6.png)
 Решить можно через Setter.
@@ -58,4 +60,15 @@ ru.kuz.spring_transaction.service.TransferServiceImpl@3986b9e9
 
 ![img_12.png](img_12.png)  
 И видим что у нас прокси `SpringCglib`  
+
+## смотри коммит `Через BeanFactory`  
+затрудняет тестирование, потому что появляется жесткая связанность между нашим сервисом и основным BeanFactory.
+## смотри коммит `Через Supplier<TransferService>`
+
+# 2 способ
+![img_13.png](img_13.png)
+~ Самый предпочтительный способ!!!
+# 3 способ
+![img_14.png](img_14.png)
+
 
