@@ -11,7 +11,19 @@
 Решить можно с помощью Self-injection
 ![img_6.png](img_6.png)
 Решить можно через Setter.
+```java
+    private TransferService transferService;
 
+    public TransferServiceImpl(TransferRepository transferRepository) {
+        this.transferRepository = transferRepository;
+    }
+
+    // Внедрение через сеттер (Spring автоматически вызовет его)
+    @Autowired
+    public void setTransferService(@Lazy TransferService transferService) {
+        this.transferService = transferService;
+    }
+```
 Решить можно через PostConstruct.
 
 ## Проверка
