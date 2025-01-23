@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kuz.spring_transaction.model.TransferRestModel;
 import ru.kuz.spring_transaction.service.TransferService;
+import ru.kuz.spring_transaction.service.TransferServiceImpl;
 
 @RestController
 @RequestMapping("/transfers")
 public class TransfersController {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private TransferService transferService;
+    private TransferServiceImpl transferService;
 
-    public TransfersController(TransferService transferService) {
+    public TransfersController(TransferServiceImpl transferService) {
         this.transferService = transferService;
     }
 

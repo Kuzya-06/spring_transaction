@@ -15,7 +15,8 @@ import ru.kuz.spring_transaction.repo.TransferRepository;
 
 @Service
 public class TransferServiceImpl
-        implements TransferService {
+        implements TransferService
+{
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     public static final String GREEN = "\u001B[32m";
     public static final String BLUE = "\u001B[34m";
