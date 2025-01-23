@@ -11,7 +11,7 @@ import ru.kuz.spring_transaction.model.TransferRestModel;
 import ru.kuz.spring_transaction.repo.TransferRepository;
 
 @Service
-public class TransferServiceImpl
+public final class TransferServiceImpl
         implements TransferService
 {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
