@@ -22,13 +22,13 @@ public class TransferServiceImpl
     public static final String RESET = "\u001B[0m";   // Сброс цвета
     private final TransferRepository transferRepository;
 
-//    private final TransferService transferService;
+    private final TransferService transferService;
 
     public TransferServiceImpl(TransferRepository transferRepository
-//            , @Lazy TransferService transferService
+            , @Lazy TransferService transferService
     ) {
         this.transferRepository = transferRepository;
-//        this.transferService = transferService;
+        this.transferService = transferService;
     }
 
     @Override
@@ -42,8 +42,8 @@ public class TransferServiceImpl
             transferRepository.save(transferEntity);
 
             LOGGER.info("{} Transfer method callRemoteService {}",GREEN,RESET);
-            callRemoteService();
-//            transferService.callRemoteService(); // вызываем через прокси
+//            callRemoteService();
+            transferService.callRemoteService(); // вызываем через прокси
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
             throw new TransferServiceException(ex);
