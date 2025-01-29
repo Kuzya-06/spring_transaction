@@ -27,8 +27,9 @@ public class TransferServiceImpl
     }
 
     @Override
-    @Transactional(rollbackFor = TransferServiceException.class)
-    public boolean transfer(TransferRestModel transferRestModel) {
+    @Transactional(noRollbackFor = TransferServiceException.class)
+//    @Transactional()
+    public boolean transfer(TransferRestModel transferRestModel) throws  TransferServiceException{
 
         LOGGER.info("{} Start transfer method {}",GREEN,RESET);
         try {
@@ -38,7 +39,7 @@ public class TransferServiceImpl
             transferRepository.save(transferEntity);
 
             LOGGER.info("{} Transfer method callRemoteService {}",GREEN,RESET);
-            callRemoteService();
+            callRemoteService(); // выкидывает RuntimeException()
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
             throw new TransferServiceException(ex);
@@ -48,7 +49,8 @@ public class TransferServiceImpl
     }
 
     @Override
-    @Transactional(noRollbackFor = RuntimeException.class)
+//    @Transactional(noRollbackFor = RuntimeException.class)
+    @Transactional()
     public void callRemoteService() {
         TransferEntity transferEntity = new TransferEntity();
         transferEntity.setSenderId("Misha");

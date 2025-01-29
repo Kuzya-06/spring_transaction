@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kuz.spring_transaction.exception.TransferServiceException;
 import ru.kuz.spring_transaction.model.TransferRestModel;
 import ru.kuz.spring_transaction.service.TransferService;
 
@@ -21,8 +22,13 @@ public class TransfersController {
 
     @PostMapping()
     public boolean transfer(@RequestBody TransferRestModel transferRestModel) {
-        boolean answer = transferService.transfer(transferRestModel);
-        LOGGER.info("transfer = {}",answer);
+        boolean answer = false;
+        try {
+            answer = transferService.transfer(transferRestModel);
+            LOGGER.info("transfer = {}", answer);
+        } catch (TransferServiceException e) {
+            System.out.println(e.getMessage());
+        }
         return answer;
     }
 }
