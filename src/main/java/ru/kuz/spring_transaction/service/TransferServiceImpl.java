@@ -10,6 +10,8 @@ import ru.kuz.spring_transaction.model.TransferEntity;
 import ru.kuz.spring_transaction.model.TransferRestModel;
 import ru.kuz.spring_transaction.repo.TransferRepository;
 
+import java.math.BigDecimal;
+
 @Service
 public class TransferServiceImpl
         implements TransferService
@@ -25,13 +27,14 @@ public class TransferServiceImpl
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = TransferServiceException.class)
     public boolean transfer(TransferRestModel transferRestModel) {
 
         LOGGER.info("{} Start transfer method {}",GREEN,RESET);
         try {
             TransferEntity transferEntity = new TransferEntity();
             BeanUtils.copyProperties(transferRestModel, transferEntity); // маппинг
+
             transferRepository.save(transferEntity);
 
             LOGGER.info("{} Transfer method callRemoteService {}",GREEN,RESET);
@@ -45,7 +48,14 @@ public class TransferServiceImpl
     }
 
     @Override
+    @Transactional(noRollbackFor = RuntimeException.class)
     public void callRemoteService() {
+        TransferEntity transferEntity = new TransferEntity();
+        transferEntity.setSenderId("Misha");
+        transferEntity.setRecipientId("Olya");
+        transferEntity.setAmount(new BigDecimal(555));
+        transferRepository.save(transferEntity);
         LOGGER.info("{} CallRemoteService method {}",BLUE,RESET);
+        throw new RuntimeException();
     }
 }
