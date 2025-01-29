@@ -3,7 +3,9 @@ package ru.kuz.spring_transaction.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kuz.spring_transaction.exception.TransferServiceException;
 import ru.kuz.spring_transaction.model.TransferEntity;
@@ -22,12 +24,17 @@ public class TransferServiceImpl
     public static final String RESET = "\u001B[0m";   // Сброс цвета
     private final TransferRepository transferRepository;
 
-    public TransferServiceImpl(TransferRepository transferRepository) {
+    private final TransferService transferService;
+
+    public TransferServiceImpl(TransferRepository transferRepository
+            , @Lazy TransferService transferService
+    ) {
         this.transferRepository = transferRepository;
+        this.transferService = transferService;
     }
 
     @Override
-    @Transactional(noRollbackFor = TransferServiceException.class)
+    @Transactional(noRollbackFor = Exception.class)
 //    @Transactional()
     public boolean transfer(TransferRestModel transferRestModel) throws  TransferServiceException{
 
@@ -39,7 +46,7 @@ public class TransferServiceImpl
             transferRepository.save(transferEntity);
 
             LOGGER.info("{} Transfer method callRemoteService {}",GREEN,RESET);
-            callRemoteService(); // выкидывает RuntimeException()
+            transferService.callRemoteService(); // выкидывает RuntimeException()
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
             throw new TransferServiceException(ex);
@@ -50,7 +57,7 @@ public class TransferServiceImpl
 
     @Override
 //    @Transactional(noRollbackFor = RuntimeException.class)
-    @Transactional()
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void callRemoteService() {
         TransferEntity transferEntity = new TransferEntity();
         transferEntity.setSenderId("Misha");
