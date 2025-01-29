@@ -34,7 +34,7 @@ public class TransferServiceImpl
     }
 
     @Override
-    @Transactional(noRollbackFor = Exception.class)
+    @Transactional(rollbackFor = TransferServiceException.class)
 //    @Transactional()
     public boolean transfer(TransferRestModel transferRestModel) throws  TransferServiceException{
 
@@ -46,13 +46,14 @@ public class TransferServiceImpl
             transferRepository.save(transferEntity);
 
             LOGGER.info("{} Transfer method callRemoteService {}",GREEN,RESET);
-            transferService.callRemoteService(); // выкидывает RuntimeException()
+            transferService.callRemoteService();
+            throw new RuntimeException();
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
             throw new TransferServiceException(ex);
         }
-        LOGGER.info("{} Finish transfer method {}",GREEN,RESET);
-        return true;
+//        LOGGER.info("{} Finish transfer method {}",GREEN,RESET);
+//        return true;
     }
 
     @Override
@@ -65,6 +66,6 @@ public class TransferServiceImpl
         transferEntity.setAmount(new BigDecimal(555));
         transferRepository.save(transferEntity);
         LOGGER.info("{} CallRemoteService method {}",BLUE,RESET);
-        throw new RuntimeException();
+//        throw new RuntimeException();
     }
 }
