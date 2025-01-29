@@ -1,0 +1,17 @@
+POST http://localhost:8089/transfers
+Content-Type: application/json
+Content-Length: 65
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.7)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "senderId": "tom",
+  "recipientId": "klop",
+  "amount": 990
+}
+
+<> 2025-01-29T101445.200.json
+
+###
+
